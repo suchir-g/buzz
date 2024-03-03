@@ -100,12 +100,10 @@
   color: grey;
 }
 
-/* Interaction States */
 .select-style:focus {
   border-color: #aaa;
 }
 
-/* Layout and Positioning */
 .spelling-bee-container {
   height: 100vh;
   text-align: center;
@@ -117,9 +115,8 @@
   text-align: center;
 }
 
-/* Hover Effects */
 .hexagon:hover {
-  fill: #e0e0e0; /* Lighter color on hover */
+  fill: #e0e0e0;
 }
 
 input {
@@ -137,9 +134,9 @@ input {
 }
 .icon {
   position: absolute;
-  top: min(15vh, 1em); /* Adjust this value as needed */
-  left: 50%; /* Center the bee icon horizontally */
-  transform: translateX(-50%); /* Center the bee icon horizontally */
+  top: min(15vh, 1em); 
+  left: 50%; 
+  transform: translateX(-50%); 
   width: 50px;
   height: auto;
 }

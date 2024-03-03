@@ -13,12 +13,12 @@ const SpellingBeeComponent = () => {
   const [isCorrect, setIsCorrect] = useState(null);
   const [inputClass, setInputClass] = useState("");
   const [showCorrectSpelling, setShowCorrectSpelling] = useState(false);
-  const [mode, setMode] = useState("hardWords"); // Initial mode
+  const [mode, setMode] = useState("hardWords");
 
   const modeOptions = [
     { value: "hardWords", text: "Hard Words", fileUrl: "/hardWords.txt" },
     { value: "SATWords", text: "SAT Words", fileUrl: "/wordsSAT.txt" },
-    { value: "easyWords", text: "Easy Words", fileUrl: "/easyWords.txt" }, // Added easyWords mode
+    { value: "easyWords", text: "Easy Words", fileUrl: "/easyWords.txt" },
   ];
 
   useEffect(() => {
@@ -46,17 +46,16 @@ const SpellingBeeComponent = () => {
       if (mode === "SATWords") {
         const line = wordList[randomIndex];
         const firstSpaceIndex = line.indexOf(" ");
-        selectedWord = line.substring(0, firstSpaceIndex).trim(); // Get only the word
-        definition = line.substring(line.indexOf("-") + 1).trim(); // Get the part after "-" as definition
+        selectedWord = line.substring(0, firstSpaceIndex).trim();
+        definition = line.substring(line.indexOf("-") + 1).trim();
         setCurrentWord(selectedWord);
         setCurrentDefinition(definition);
       } else {
         selectedWord = wordList[randomIndex];
         setCurrentWord(selectedWord);
-        setCurrentDefinition(""); // Clear previous definition
+        setCurrentDefinition("");
       }
 
-      // Fetch audio and possibly definition for hardWords mode
       await fetchAudioAndDefinitionFromAPI(selectedWord);
     }
   };
@@ -64,7 +63,7 @@ const SpellingBeeComponent = () => {
   const fetchAudioAndDefinitionFromAPI = async (word) => {
     console.log(word);
 
-    const apiKey = "7fba8d8c-03a2-486e-87d8-0fcfac59cc87"; // Use your actual API key
+    const apiKey = "7fba8d8c-03a2-486e-87d8-0fcfac59cc87";
     const apiUrl = `https://dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=${apiKey}`;
 
     try {
@@ -73,12 +72,10 @@ const SpellingBeeComponent = () => {
 
       if (data && data.length > 0 && data[0].hwi) {
         if (mode !== "SATWords" && data[0].shortdef) {
-          // Update definition for modes other than SATWords
           const definition = data[0].shortdef[0];
           setCurrentDefinition(definition);
         }
 
-        // Find a pronunciation that has an audio field
         const prsWithAudio = data[0].hwi.prs.find(
           (pr) => pr.sound && pr.sound.audio
         );
@@ -123,7 +120,6 @@ const SpellingBeeComponent = () => {
   };
 
   const checkWord = () => {
-    // Trim and compare in lowercase to ensure case-insensitive comparison.
     const trimmedUserInput = userInput.trim().toLowerCase();
     const trimmedCurrentWord = currentWord.trim().toLowerCase();
 
@@ -131,7 +127,6 @@ const SpellingBeeComponent = () => {
     setIsCorrect(isWordCorrect);
     setInputClass(isWordCorrect ? "inputFlashGreen" : "inputShake");
 
-    // Use setTimeout to reset the input class allowing the animation to play out.
     setTimeout(() => setInputClass(""), isWordCorrect ? 2000 : 500);
     setShowCorrectSpelling(!isWordCorrect);
   };
@@ -139,7 +134,10 @@ const SpellingBeeComponent = () => {
   const playAudio = () => {
     if (audioUrl) {
       const audio = new Audio(audioUrl);
-      audio.play().catch((e) => console.error("Error playing audio:", e));
+      // Set a delay of 1000 milliseconds (1 second) before playing the audio
+      setTimeout(() => {
+        audio.play().catch((e) => console.error("Error playing audio:", e));
+      }, 1000); // You can adjust the delay time as needed
     }
   };
 
@@ -147,7 +145,7 @@ const SpellingBeeComponent = () => {
     setUserInput("");
     setIsCorrect(null);
     setShowCorrectSpelling(false);
-    selectRandomWordAndFetchDetails(words); // Re-fetch with current words list
+    selectRandomWordAndFetchDetails(words);
   };
 
   return (
@@ -158,8 +156,8 @@ const SpellingBeeComponent = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        height: "100vh", // This sets the container's height to the full viewport height
-        textAlign: "center", // This centers the text elements inside the flex container
+        height: "100vh",
+        textAlign: "center",
       }}
       id="honeycomb"
     >
@@ -171,7 +169,7 @@ const SpellingBeeComponent = () => {
           id="mode-select"
           value={mode}
           onChange={(e) => setMode(e.target.value)}
-          className="select-style" // Updated to use the new class
+          className="select-style"
         >
           {modeOptions.map((option) => (
             <option key={option.value} value={option.value}>

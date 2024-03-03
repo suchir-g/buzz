@@ -17,14 +17,13 @@ const FlyingLettersComponent = () => {
       flyingLetter.classList.add("flying-letter");
       flyingLetter.style.left = `${posX}px`;
       flyingLetter.style.top = `${posY}px`;
-      flyingLetter.style.color = randomColor; // Apply the random color
+      flyingLetter.style.color = randomColor;
 
-      // Random rotation
-      const rotation = Math.random() * 360; // Random angle between 0 and 360 degrees
+      const rotation = Math.random() * 360;
       flyingLetter.style.transform = `rotate(${rotation}deg)`;
 
-      const angle = Math.random() * Math.PI * 2; // Random angle
-      const distance = Math.random() * 100 + 50; // Random distance
+      const angle = Math.random() * Math.PI * 2;
+      const distance = Math.random() * 100 + 50;
       const endX = posX + distance * Math.cos(angle);
       const endY = posY + distance * Math.sin(angle);
 
@@ -39,22 +38,21 @@ const FlyingLettersComponent = () => {
           },
         ],
         {
-          duration: 1000, // Animation duration
+          duration: 1000,
           easing: "ease-out",
-          fill: "forwards", // Keep the final state after animation
+          fill: "forwards",
         }
       );
 
       document.body.appendChild(flyingLetter);
 
-      // Remove the element after animation
       flyingLetter.onanimationend = () => flyingLetter.remove();
     };
 
     const handleMouseMove = (event) => {
       const posX = event.clientX;
       const posY = event.clientY;
-      createFlyingLetter(posX, posY); // Replace 'A' with the desired letter
+      createFlyingLetter(posX, posY);
     };
 
     document.addEventListener("mousemove", handleMouseMove);
@@ -62,9 +60,9 @@ const FlyingLettersComponent = () => {
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
     };
-  }, []); // Empty dependency array ensures this effect only runs once
+  }, []);
 
-  return null; // Since this component only deals with side effects, return null
+  return null;
 };
 
 export default FlyingLettersComponent;
