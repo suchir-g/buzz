@@ -1,0 +1,154 @@
+/* Animations */
+@keyframes flashGreen {
+  0%,
+  100% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: #fdc500;
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-10px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(10px);
+  }
+}
+
+/* Base Element Styling */
+.inputFlashGreen {
+  background-color: transparent;
+  animation: flashGreen 1s ease-in-out;
+}
+
+.inputShake {
+  animation: shake 0.5s;
+}
+
+.select-style,
+.select-style option {
+  background-color: white;
+  border-radius: 4px;
+}
+
+.select-style {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  outline: none;
+  font-size: 16px;
+  margin: 10px auto;
+  display: block;
+}
+
+.select-style option {
+  padding: 8px;
+}
+
+.form-style,
+.spelling-bee-container,
+.contact-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.spelling-bee-container {
+  height: 100vh;
+  text-align: center;
+  background-image: linear-gradient(
+    0deg,
+    transparent 99%,
+    rgba(0, 0, 0, 0.048) 99%
+  );
+  background-size: 50px 50px;
+}
+
+
+.audio-button,
+.next-word-button {
+  margin: 10px 0;
+}
+
+.definition-style {
+  margin-top: 20px;
+}
+
+.contact-text {
+  font-family: "Caveat", cursive;
+  font-size: 24px;
+}
+
+.social-icon {
+  margin: 0 10px;
+  color: grey;
+}
+
+/* Interaction States */
+.select-style:focus {
+  border-color: #aaa;
+}
+
+/* Layout and Positioning */
+.spelling-bee-container {
+  height: 100vh;
+  text-align: center;
+}
+
+.contact-section {
+  position: absolute;
+  bottom: 20px;
+  text-align: center;
+}
+
+/* Hover Effects */
+.hexagon:hover {
+  fill: #e0e0e0; /* Lighter color on hover */
+}
+
+input {
+  margin-top: 20px;
+  padding: 10px;
+  width: 200px;
+  text-align: center;
+  border: 1px solid #3b3b3b;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  text-shadow: 0px 0px 10px rgba(89, 89, 89, 0.229);
+  font-size: 2.5em;
+}
+.icon {
+  position: absolute;
+  top: min(15vh, 1em); /* Adjust this value as needed */
+  left: 50%; /* Center the bee icon horizontally */
+  transform: translateX(-50%); /* Center the bee icon horizontally */
+  width: 50px;
+  height: auto;
+}
+
+.iconBottom {
+  transition: 1s;
+}
+
+.iconBottom:hover {
+  color: #fdc500;
+  transform: scale(1.2);
+}

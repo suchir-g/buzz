@@ -1,0 +1,10 @@
+.flying-letter {
+  position: absolute;
+  font-size: 16px; /* Adjust the font size as needed */
+  user-select: none;
+  font-family: "Courier New", Courier, monospace;
+  pointer-events: none; /* Make the flying letters non-interactive */
+  z-index: -1;
+  text-shadow: 0px 0px 5px  #fdc500;
+
+}

@@ -1,0 +1,8 @@
+.App {
+  text-align: center;
+}
+
+*::selection {
+  background-color: #fdc500;
+  color: black;
+}
