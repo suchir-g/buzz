@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./SpellingBeeComponent.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 const SpellingBeeComponent = () => {
   const [words, setWords] = useState([]);
@@ -23,6 +23,7 @@ const SpellingBeeComponent = () => {
 
   useEffect(() => {
     fetchWords();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 
   const fetchWords = async () => {
@@ -44,6 +45,7 @@ const SpellingBeeComponent = () => {
       let selectedWord, definition;
 
       if (mode === "SATWords") {
+        // In SAT mode, each line is "word - definition"
         const line = wordList[randomIndex];
         const firstSpaceIndex = line.indexOf(" ");
         selectedWord = line.substring(0, firstSpaceIndex).trim();
@@ -51,6 +53,7 @@ const SpellingBeeComponent = () => {
         setCurrentWord(selectedWord);
         setCurrentDefinition(definition);
       } else {
+        // Hard/easy words only have the word in the file
         selectedWord = wordList[randomIndex];
         setCurrentWord(selectedWord);
         setCurrentDefinition("");
@@ -61,7 +64,7 @@ const SpellingBeeComponent = () => {
   };
 
   const fetchAudioAndDefinitionFromAPI = async (word) => {
-    console.log(word);
+    console.log("Fetching definition for:", word);
 
     const apiKey = "7fba8d8c-03a2-486e-87d8-0fcfac59cc87";
     const apiUrl = `https://dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=${apiKey}`;
@@ -70,13 +73,22 @@ const SpellingBeeComponent = () => {
       const response = await fetch(apiUrl);
       const data = await response.json();
 
+      // If we got a valid response with "hwi", attempt to gather definition/audio
       if (data && data.length > 0 && data[0].hwi) {
-        if (mode !== "SATWords" && data[0].shortdef) {
-          const definition = data[0].shortdef[0];
-          setCurrentDefinition(definition);
+        // For non-SAT modes, we rely on the dictionary definition
+        if (mode !== "SATWords") {
+          // If there's no shortdef, treat as "no definition found" => pick new word
+          if (!data[0].shortdef || data[0].shortdef.length === 0) {
+            console.error("No definition found, auto-loading next word...");
+            selectRandomWordAndFetchDetails(words);
+            return;
+          } else {
+            setCurrentDefinition(data[0].shortdef[0]);
+          }
         }
 
-        const prsWithAudio = data[0].hwi.prs.find(
+        // Audio
+        const prsWithAudio = data[0].hwi.prs?.find(
           (pr) => pr.sound && pr.sound.audio
         );
         if (prsWithAudio) {
@@ -95,18 +107,14 @@ const SpellingBeeComponent = () => {
           setAudioUrl("");
         }
       } else {
-        console.error("No data found for the selected word.");
-        setAudioUrl("");
-        if (mode !== "SATWords") {
-          setCurrentDefinition("No definition found.");
-        }
+        // If we didn't get the data we need, auto-load another
+        console.error("Invalid data, auto-loading next word...");
+        selectRandomWordAndFetchDetails(words);
       }
     } catch (error) {
       console.error("Error fetching details from API:", error);
-      setAudioUrl("");
-      if (mode !== "SATWords") {
-        setCurrentDefinition("Error fetching definition.");
-      }
+      // Also auto-load another word on error
+      selectRandomWordAndFetchDetails(words);
     }
   };
 
@@ -127,17 +135,20 @@ const SpellingBeeComponent = () => {
     setIsCorrect(isWordCorrect);
     setInputClass(isWordCorrect ? "inputFlashGreen" : "inputShake");
 
+    // Show the shaking/green animation briefly
     setTimeout(() => setInputClass(""), isWordCorrect ? 2000 : 500);
+
+    // If incorrect, show the correct spelling
     setShowCorrectSpelling(!isWordCorrect);
   };
 
   const playAudio = () => {
     if (audioUrl) {
       const audio = new Audio(audioUrl);
-      // Set a delay of 1000 milliseconds (1 second) before playing the audio
+      // Optional short delay
       setTimeout(() => {
-        audio.play().catch((e) => console.error("Error playing audio:", e));
-      }, 1000); // You can adjust the delay time as needed
+        audio.play().catch((err) => console.error("Error playing audio:", err));
+      }, 500);
     }
   };
 
@@ -149,81 +160,62 @@ const SpellingBeeComponent = () => {
   };
 
   return (
-    <div
-      className="spelling-bee-container"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        textAlign: "center",
-      }}
-      id="honeycomb"
-    >
+    <div className="spelling-bee-container" id="honeycomb">
       <img src="/largerbee.png" alt="Bee icon" className="icon" />
       <h1 className="title">Spelling Bee Practice</h1>
-      <div>
-        <label htmlFor="mode-select">Choose a mode:</label>
-        <select
-          id="mode-select"
-          value={mode}
-          onChange={(e) => setMode(e.target.value)}
-          className="select-style"
-        >
-          {modeOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.text}
-            </option>
-          ))}
-        </select>
-      </div>
-      <button
-        onClick={playAudio}
-        disabled={!audioUrl}
-        style={{ margin: "10px 0" }}
+
+      <label htmlFor="mode-select">Choose a mode:</label>
+      <select
+        id="mode-select"
+        value={mode}
+        onChange={(e) => setMode(e.target.value)}
+        className="select-style"
       >
+        {modeOptions.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.text}
+          </option>
+        ))}
+      </select>
+
+      <button onClick={playAudio} disabled={!audioUrl}>
         🔊 Listen
       </button>
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <input
-          type="text"
-          value={userInput}
-          onChange={handleInputChange}
-          placeholder="Type the spelling here"
-          className={inputClass}
-        />
-        <br />
+
+      <form onSubmit={handleSubmit} className="form-style">
+        <div className="input-row">
+          <input
+            type="text"
+            value={userInput}
+            onChange={handleInputChange}
+            placeholder="Type the spelling here"
+            className={inputClass}
+          />
+
+          {/* Bright yellow icon button for submit (paper plane) */}
+          <button type="submit" className="submit-button">
+            <FontAwesomeIcon icon={faPaperPlane} />
+          </button>
+        </div>
       </form>
+
       {isCorrect === false && (
         <>
-          <button onClick={handleNextWord} style={{ margin: "10px 0" }}>
-            Try Next Word
-          </button>
+          <button onClick={handleNextWord}>Try Next Word</button>
           {showCorrectSpelling && (
-            <p style={{ marginTop: "20px" }}>Correct spelling: {currentWord}</p>
+            <p className="definition-style">
+              Correct spelling: <strong>{currentWord}</strong>
+            </p>
           )}
         </>
       )}
-      {isCorrect && (
-        <button onClick={handleNextWord} style={{ margin: "10px 0" }}>
-          Next Word
-        </button>
-      )}
-      <p style={{ marginTop: "20px" }}>Definition: {currentDefinition}</p>
-      <div
-        style={{ position: "absolute", bottom: "20px", textAlign: "center" }}
-      >
-        <p style={{ fontFamily: "'Caveat', cursive", fontSize: "24px" }}>
-          Contact me
-        </p>
+
+      {isCorrect && <button onClick={handleNextWord}>Next Word</button>}
+
+      <p className="definition-style">Definition: {currentDefinition}</p>
+
+      <div className="contact-section">
+        <p className="contact-text">Contact me</p>
         <a
           href="https://www.instagram.com/suchir.gup/"
           target="_blank"
@@ -232,19 +224,11 @@ const SpellingBeeComponent = () => {
           <FontAwesomeIcon
             icon={faInstagram}
             size="2x"
-            style={{ margin: "0 10px" }}
-            color="grey"
             className="iconBottom"
           />
         </a>
         <a href="mailto:18sgupta@heckgrammar.co.uk">
-          <FontAwesomeIcon
-            icon={faEnvelope}
-            size="2x"
-            style={{ margin: "0 10px" }}
-            color="grey"
-            className="iconBottom"
-          />
+          <FontAwesomeIcon icon={faEnvelope} size="2x" className="iconBottom" />
         </a>
       </div>
     </div>

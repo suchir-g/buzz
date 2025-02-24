@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import "./CursorTrail.css";
+
 const FlyingLettersComponent = () => {
   useEffect(() => {
     const createFlyingLetter = (posX, posY) => {
       const letter = String.fromCharCode(
         Math.random() < 0.5
-          ? Math.floor(Math.random() * 26) + 97
-          : Math.floor(Math.random() * 26) + 65
+          ? Math.floor(Math.random() * 26) + 97 // lowercase a-z
+          : Math.floor(Math.random() * 26) + 65 // uppercase A-Z
       );
       const flyingLetter = document.createElement("span");
       flyingLetter.innerText = letter;
@@ -27,7 +28,8 @@ const FlyingLettersComponent = () => {
       const endX = posX + distance * Math.cos(angle);
       const endY = posY + distance * Math.sin(angle);
 
-      flyingLetter.animate(
+      // Use the returned Animation object, and set onfinish
+      const animation = flyingLetter.animate(
         [
           { transform: "translate(0, 0)", opacity: 1 },
           {
@@ -46,7 +48,10 @@ const FlyingLettersComponent = () => {
 
       document.body.appendChild(flyingLetter);
 
-      flyingLetter.onanimationend = () => flyingLetter.remove();
+      // Remove the element after the animation finishes
+      animation.onfinish = () => {
+        flyingLetter.remove();
+      };
     };
 
     const handleMouseMove = (event) => {

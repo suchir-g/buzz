@@ -29,9 +29,8 @@
   }
 }
 
-/* Base Element Styling */
+/* Correct/incorrect input feedback */
 .inputFlashGreen {
-  background-color: transparent;
   animation: flashGreen 1s ease-in-out;
 }
 
@@ -39,39 +38,15 @@
   animation: shake 0.5s;
 }
 
-.select-style,
-.select-style option {
-  background-color: white;
-  border-radius: 4px;
-}
-
-.select-style {
-  padding: 8px 16px;
-  border: 1px solid #ddd;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  outline: none;
-  font-size: 16px;
-  margin: 10px auto;
-  display: block;
-}
-
-.select-style option {
-  padding: 8px;
-}
-
-.form-style,
-.spelling-bee-container,
-.contact-section {
+/* Overall container */
+.spelling-bee-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: relative;
-}
-
-.spelling-bee-container {
   height: 100vh;
   text-align: center;
+  position: relative;
   background-image: linear-gradient(
     0deg,
     transparent 99%,
@@ -80,72 +55,157 @@
   background-size: 50px 50px;
 }
 
-
-.audio-button,
-.next-word-button {
-  margin: 10px 0;
+/* Title styling */
+.title {
+  text-shadow: 0px 0px 10px rgba(89, 89, 89, 0.229);
+  font-size: 2.5em;
+  margin-bottom: 20px;
 }
 
+/* Bee icon */
+.icon {
+  position: absolute;
+  top: min(15vh, 1em);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: auto;
+}
+
+/* Form layout */
+.form-style {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Input styling: white, rounded, consistent border + box-shadow */
+input {
+  padding: 10px 16px;
+  width: 220px;
+  text-align: center;
+  border: 1px solid #3b3b3b;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #3b3b3b;
+  font-size: 16px;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Select styling: same border & rounded corners as input + box-shadow */
+.select-style {
+  padding: 10px 16px;
+  background-color: #fff;
+  color: #3b3b3b;
+  border: 1px solid #3b3b3b;
+  border-radius: 4px;
+  font-size: 16px;
+  margin: 10px auto;
+  display: block;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Default buttons (Listen, Next Word, etc.): dark grey, white text + box-shadow */
+button {
+  padding: 10px 16px;
+  background-color: #3b3b3b;
+  color: #fff;
+  border: 1px solid #3b3b3b;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  margin-top: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+  transform: scale(1.03);
+  background-color: #555;
+}
+
+/* The special bright yellow submit icon button
+   Same padding/border for height match + box-shadow 
+ */
+.submit-button {
+  margin-top: 0;
+  margin-left: 8px;
+  background-color: #fdc500 !important;
+  border: 1px solid #fdc500;
+  border-radius: 4px;
+  color: #fff;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  padding: 10px 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button:hover {
+  background-color: #ffd633;
+  transform: scale(1.07);
+}
+
+/* Definition paragraph styling */
 .definition-style {
   margin-top: 20px;
+}
+
+/* Contact section at bottom */
+.contact-section {
+  position: absolute;
+  bottom: 20px;
+  text-align: center;
+  width: 100%;
 }
 
 .contact-text {
   font-family: "Caveat", cursive;
   font-size: 24px;
+  margin-bottom: 10px;
 }
 
-.social-icon {
+/* Social icons */
+.iconBottom {
+  transition: 0.3s;
   margin: 0 10px;
   color: grey;
-}
-
-.select-style:focus {
-  border-color: #aaa;
-}
-
-.spelling-bee-container {
-  height: 100vh;
-  text-align: center;
-}
-
-.contact-section {
-  position: absolute;
-  bottom: 20px;
-  text-align: center;
-}
-
-.hexagon:hover {
-  fill: #e0e0e0;
-}
-
-input {
-  margin-top: 20px;
-  padding: 10px;
-  width: 200px;
-  text-align: center;
-  border: 1px solid #3b3b3b;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.title {
-  text-shadow: 0px 0px 10px rgba(89, 89, 89, 0.229);
-  font-size: 2.5em;
-}
-.icon {
-  position: absolute;
-  top: min(15vh, 1em); 
-  left: 50%; 
-  transform: translateX(-50%); 
-  width: 50px;
-  height: auto;
-}
-
-.iconBottom {
-  transition: 1s;
 }
 
 .iconBottom:hover {
   color: #fdc500;
   transform: scale(1.2);
+}
+
+/* 
+  Responsive adjustments for smaller screens:
+  - Make .input-row vertical
+  - Let input fill more width
+*/
+@media (max-width: 480px) {
+  .input-row {
+    flex-direction: column;
+    margin-top: 10px;
+  }
+
+  .input-row input {
+    margin-bottom: 10px;
+    width: 90%;
+  }
+
+  .submit-button {
+    margin-left: 0;
+    width: 90%;
+  }
 }
